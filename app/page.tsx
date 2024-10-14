@@ -5,7 +5,7 @@ import HeroSection from "@/components/main/HeroSection";
 
 export default function Home() {
   return (
-    <div className="items-center justify-items-center min-h-screen">
+    <div className="w-screen">
       {/* <HeroSection /> */}
       <Calendar />
     </div>

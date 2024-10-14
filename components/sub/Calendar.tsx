@@ -1,4 +1,5 @@
 "use client"
+
 /* eslint-disable prefer-const */
 import React, { useState } from 'react';
 
@@ -9,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { RatingTags } from './RatingTags';
+
 const years = Array.from({length: 2040-2024 +1}, (v, i) => 2024+i)
 const months = {
     'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr', 
@@ -45,7 +46,7 @@ export default function Calendar() {
 
     return (
         <div className='flex flex-col overflow-hidden gap-1'>
-            <div className='flex gap-x-10'>
+            <div className='flex gap-x-4 justify-center items-center mb-8 mt-10'>
                 <div>
                     <Select
                     value={selectedMonth}
@@ -90,10 +91,9 @@ export default function Calendar() {
 
                         if (!dayDisplay) {
                             return (
-                                <div className='bg- rounded-full' key={dayOfWeekIndex}></div>
+                                <div className='rounded-full ' key={dayOfWeekIndex}></div>
                             );
                         }
-
                         return (
                             <div key={dayOfWeekIndex} className={isToday ? 'bg-blue-400 rounded-full py-2 pl-3 max-w-40 hover:cursor-pointer' : ''+ 'hover:cursor-pointer border border-rose-300 rounded-full py-2 pl-3 max-w-40'}>
                                 {dayIndex}.
