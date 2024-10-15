@@ -1,25 +1,29 @@
+"use server"
 /* eslint-disable prefer-const */
 import React from 'react';
 import prisma from '@/db/src';
+import { RatingBackground } from './RatingTags';
 const months = {
     'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr', 
     'May': 'May', 'June': 'Jun', 'July': 'Jul', 'August': 'Aug', 
     'September': 'Sept', 'October': 'Oct', 'November': 'Nov', 'December': 'Dec'
 };
-export const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const now = new Date();
 const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 
 
-const getData = async () => {
+const getData = async (year: number, month: number) => {
     try{
         const user = prisma.moodLog.findMany({
             where: {
-                userId: 'aryan',
-                month: 10
+                userId: 'ashish',
+                month,
+                year
             },
-            select: {
+            select:{
+                date: true,
                 rating: true
             }
         })
@@ -30,9 +34,11 @@ const getData = async () => {
 }
 
 export default async function GetCalender({year, month}: {year: number, month: string}) {
+    const monthNumber = monthNames.indexOf(month)+1;
+    const userData = await getData(year, monthNumber) ?? [];
+    const Dates: number[] = userData.map(item => item.date)
+    const Ratings: number[] = userData.map(item => item.rating)
 
-    const ratingData = await getData() ?? [];
-    console.log(ratingData[0]?.rating)
 
     // Correctly calculate the first day of the month and the number of days in the month
     const monthNow = new Date(year, Object.keys(months).indexOf(month), 1);
@@ -54,16 +60,23 @@ export default async function GetCalender({year, month}: {year: number, month: s
                         // Check if the day is within the current month
                         let dayDisplay = (dayIndex > daysInMonth || dayIndex <= 0) ? false : true;
 
-                        // Check if the current day is today
                         let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
-
                         if (!dayDisplay) {
                             return (
                                 <div className='rounded-full ' key={dayOfWeekIndex}></div>
                             );
                         }
+
+                        let ratingValue = Ratings[Dates.lastIndexOf(dayIndex)] === undefined ? '-0' : `${Ratings[Dates.lastIndexOf(dayIndex)]}` ;
+                        
+                        
                         return (
-                            <div key={dayOfWeekIndex} className={isToday ? 'bg-blue-400 rounded-full py-2 pl-3 max-w-40 hover:cursor-pointer' : ''+ 'hover:cursor-pointer border border-rose-300 rounded-full py-2 pl-3 max-w-40'}>
+                            
+                            <div key={dayOfWeekIndex} 
+                            className={`hover:cursor-pointer border border-neutral-800 rounded-full py-2 pl-3 max-w-40 
+                            ${RatingBackground[ratingValue]} 
+                            ${isToday ? (ratingValue === '-0' ? 'bg-cyan-400' : '') : ''}`}
+                            >
                                 {dayIndex}.
                             </div>
                         );

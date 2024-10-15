@@ -21,11 +21,12 @@ model User {
 }
 
 model MoodLog {
-  id Int @id @default(autoincrement())
-  date   DateTime
-  year   Int
-  month  Int
-  rating Int
-  user   User     @relation(fields: [userId], references: [id])
-  userId String
+  id       Int      @id @default(autoincrement())
+  fullDate DateTime
+  date     Int      
+  year     Int
+  month    Int
+  rating   Int
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String
 }

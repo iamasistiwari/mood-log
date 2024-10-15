@@ -3,22 +3,24 @@ async function main() {
   // Create dummy users
   const user1 = await prisma.user.create({
     data: {
-      id: "ashishtiwari2qwe1212",
+      id: "aman",
       name: 'John Doe',
       imageUrl: 'https://example.com/johndoe.jpg',
       moodLog: {
         create: [
           {
-            date: new Date(),
-            year: 2024,
+            fullDate: new Date(),
+            date:13,
+            year:2024,
             month: 10,
-            rating: 5,
+            rating: 2,
           },
           {
-            date: new Date(),
-            year: 2024,
+            fullDate: new Date(),
+            date:12,
+            year:2024,
             month: 10,
-            rating: 3,
+            rating: 4,
           },
         ],
       },
@@ -27,22 +29,24 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
-      id: "aryan12",
+      id: "aryan",
       name: 'Jane Smith',
       imageUrl: 'https://example.com/janesmith.jpg',
       moodLog: {
         create: [
           {
-            date: new Date(),
-            year: 2024,
+            fullDate: new Date(),
+            date:15,
+            year:2024,
             month: 10,
-            rating: 4,
+            rating: 7,
           },
           {
-            date: new Date(),
-            year: 2024,
+            fullDate: new Date(),
+            date:15,
+            year:2024,
             month: 10,
-            rating: 2,
+            rating: 7,
           },
         ],
       },
