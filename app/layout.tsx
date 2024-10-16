@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Fugaz_One } from 'next/font/google';
 import NavBar from "@/components/main/NavBar";
+import { Providers } from "./providers";
 
 
 const fugazOne = Fugaz_One({
-  weight: '400', // since Fugaz One has only one weight (400)
+  weight: '400',
   subsets: ['latin'],
   display: 'swap',
 });
@@ -24,8 +25,10 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${fugazOne.className}  text-slate-200 bg-black antialiased h-screen`}>
-          <NavBar />
-          {children}
+          <Providers>
+            <NavBar />
+            {children}
+          </Providers>
       </body>
     </html>
   );

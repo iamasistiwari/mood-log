@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import '../../app/globals.css';
+import RateSubmit from '@/actions/RateSubmit';
 
 export default function NumberInput() {
     const [inputValue, setInputValue] = useState<number | string>('');
@@ -25,7 +26,7 @@ export default function NumberInput() {
                     placeholder="Enter a number"
                     className={`no-arrows ml-5 border border-neutral-800 focus:outline-0 w-96 bg-black p-2 rounded-xl ${warning ? 'border-red-500' : 'border-gray-300'}`} 
                 />
-                <button disabled={warning} className={`border border-slate-400 ${inputValue === ''? 'cursor-not-allowed': ''} rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
+                <button disabled={warning} onClick={() => {RateSubmit(Number(inputValue))}} className={`border border-slate-400 ${inputValue === ''? 'cursor-not-allowed': ''} rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
             </div>
             {warning && <p className="text-red-500 text-sm w-full top-[52px] right-9 text-center absolute">Entered number should be <span className='font-semibold'>' -10' {'<'}= no {'>'}= '10'</span></p>}
         </div>

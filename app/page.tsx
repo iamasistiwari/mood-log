@@ -1,5 +1,4 @@
-import Calendar from "@/components/sub/Calendar";
-import HeroSection from "@/components/main/HeroSection";
+import Calendar from "@/components/main/Calendar";
 import Rate from "@/components/sub/Rate";
 
 

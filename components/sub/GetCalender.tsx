@@ -3,6 +3,8 @@
 import React from 'react';
 import prisma from '@/db/src';
 import { RatingBackground } from './RatingTags';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 const months = {
     'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr', 
     'May': 'May', 'June': 'Jun', 'July': 'Jul', 'August': 'Aug', 
@@ -15,10 +17,11 @@ const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday
 
 
 const getData = async (year: number, month: number) => {
+    const session = await getServerSession(authOptions)
     try{
         const user = prisma.moodLog.findMany({
             where: {
-                userId: 'ashish',
+                userId: session?.user.id,
                 month,
                 year
             },
@@ -38,7 +41,6 @@ export default async function GetCalender({year, month}: {year: number, month: s
     const userData = await getData(year, monthNumber) ?? [];
     const Dates: number[] = userData.map(item => item.date)
     const Ratings: number[] = userData.map(item => item.rating)
-
 
     // Correctly calculate the first day of the month and the number of days in the month
     const monthNow = new Date(year, Object.keys(months).indexOf(month), 1);
@@ -60,7 +62,7 @@ export default async function GetCalender({year, month}: {year: number, month: s
                         // Check if the day is within the current month
                         let dayDisplay = (dayIndex > daysInMonth || dayIndex <= 0) ? false : true;
 
-                        let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
+                        // let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
                         if (!dayDisplay) {
                             return (
                                 <div className='rounded-full ' key={dayOfWeekIndex}></div>
@@ -75,7 +77,7 @@ export default async function GetCalender({year, month}: {year: number, month: s
                             <div key={dayOfWeekIndex} 
                             className={`hover:cursor-pointer border border-neutral-800 rounded-full py-2 pl-3 max-w-40 
                             ${RatingBackground[ratingValue]} 
-                            ${isToday ? (ratingValue === '-0' ? 'bg-cyan-400' : '') : ''}`}
+                            $`}
                             >
                                 {dayIndex}.
                             </div>
@@ -86,3 +88,6 @@ export default async function GetCalender({year, month}: {year: number, month: s
         </div>
     );
 }
+
+
+// {isToday ? (ratingValue === '-0' ? 'bg-cyan-400' : '') : ''}

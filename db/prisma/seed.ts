@@ -3,9 +3,10 @@ async function main() {
   // Create dummy users
   const user1 = await prisma.user.create({
     data: {
-      id: "aman",
       name: 'John Doe',
       imageUrl: 'https://example.com/johndoe.jpg',
+      email: "ashish@gmail.com",
+      password: "ashish",
       moodLog: {
         create: [
           {
@@ -29,9 +30,10 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
-      id: "aryan",
       name: 'Jane Smith',
       imageUrl: 'https://example.com/janesmith.jpg',
+      email: "aryan@gmail.com",
+      password: "ashish",
       moodLog: {
         create: [
           {

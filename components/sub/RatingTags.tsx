@@ -11,23 +11,11 @@ export const RatingBackground: RatingArrayType = {
     '7': 'bg-green-700',
     '6': 'bg-green-600',
     '5': 'bg-green-500',
-    '4': 'bg-green-400',
-    '3': 'bg-green-300',
-    '2': 'bg-green-200',
-    '1': 'bg-green-100',
-    '0': 'bg-green-50',
-    '-0': '',
-    '-1': 'bg-rose-100',
-    '-2': 'bg-rose-200',
-    '-3': 'bg-rose-300',
-    '-4': 'bg-rose-400',
-    '-5': 'bg-rose-500',
-    '-6': 'bg-rose-600',
-    '-7': 'bg-rose-700',
-    '-8': 'bg-rose-800',
-    '-9': 'bg-rose-900',
-    '-10': 'bg-rose-950',
-
+    '4': 'bg-rose-400',
+    '3': 'bg-rose-600',
+    '2': 'bg-rose-700',
+    '1': 'bg-rose-800',
+    '0': 'bg-rose-900',
 }
 // export const RatingBackground: RatingArrayType = {
 //   '10' : 'bg-love',
@@ -54,31 +42,45 @@ export const RatingBackground: RatingArrayType = {
 //   '-10': 'bg-depressed',
 
 // }
+// const RatingNames2: RatingArrayType = {
+//     '10' : 'joy, love, freedom, gratitude, abundance, generosity',
+//     '9': 'empowerment, fun',
+//     '8': 'happiness, enthusiasm',
+//     '7': 'confidence',
+//     '6': 'optimistic, trust',
+//     '5': 'strong',
+//     '4': 'hope',
+//     '3': 'dedicated, motivated',
+//     '2': 'content, ok',
+//     '1': 'peace, calm',
+//     '0': 'neutral, relaxed',
+//     '-1': 'relived, apathy',
+//     '-2': 'pessimistic, impatient',
+//     '-3': 'frustrated, irritated',
+//     '-4': 'overwhelmed, anxiety',
+//     '-5': 'boredom, doubt',
+//     '-6': 'worry, blame',
+//     '-7': 'discouraged, difficult',
+//     '-8': 'anger, revenge, greed, lack',
+//     '-9': 'hate, rage, jealousy, resent',
+//     '-10': 'guilt, insecure, depressed, stuck, fear, grief, self-loathing, powerlessness, unworthiness, shame',
+// }
+
 const RatingNames: RatingArrayType = {
-    '10' : 'joy, love, freedom, gratitude, abundance, generosity',
-    '9': 'empowerment, fun',
-    '8': 'happiness, enthusiasm',
-    '7': 'confidence',
-    '6': 'optimistic, trust',
-    '5': 'strong',
-    '4': 'hope',
-    '3': 'dedicated, motivated',
-    '2': 'content, ok',
-    '1': 'peace, calm',
-    '0': 'neutral, relaxed',
-    '-1': 'relived, apathy',
-    '-2': 'pessimistic, impatient',
-    '-3': 'frustrated, irritated',
-    '-4': 'overwhelmed, anxiety',
-    '-5': 'boredom, doubt',
-    '-6': 'worry, blame',
-    '-7': 'discouraged, difficult',
-    '-8': 'anger, revenge, greed, lack',
-    '-9': 'hate, rage, jealousy, resent',
-    '-10': 'guilt, insecure, depressed, stuck, fear, grief, self-loathing, powerlessness, unworthiness, shame',
+  '10' : 'joy, love, freedom, gratitude, abundance, generosity',
+  '9': 'empowerment, fun',
+  '8': 'happiness, enthusiasm',
+  '7': 'confidence',
+  '6': 'optimistic, trust',
+  '5': 'motivated, hope, strong',
+  '4': 'neutral, relaxed, peace, calm',
+  '3': 'overwhelmed, anxiety, frustrated, irritated',
+  '2': 'worry, blame, boredom, doubt',
+  '1': 'anger, revenge, greed, lack',
+  '0': 'guilt, hate, fear, stuck, depressed, insecure'
 }
 
-const tags = Array.from({ length: 21 }, (v, i) => 10 - i);
+const tags = Array.from({ length: 11 }, (v, i) => i);
 
 
 export function RatingTags() {
