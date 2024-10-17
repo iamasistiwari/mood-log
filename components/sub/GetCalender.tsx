@@ -48,6 +48,8 @@ export default async function GetCalender({year, month}: {year: number, month: s
     const daysInMonth = new Date(year, Object.keys(months).indexOf(month) + 1, 0).getDate();
 
 
+
+
     // Calculate how many rows are needed for the calendar grid
     const daysToDisplay = firstDayOfMonth + daysInMonth;
     const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
@@ -62,7 +64,7 @@ export default async function GetCalender({year, month}: {year: number, month: s
                         // Check if the day is within the current month
                         let dayDisplay = (dayIndex > daysInMonth || dayIndex <= 0) ? false : true;
 
-                        // let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
+                        let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
                         if (!dayDisplay) {
                             return (
                                 <div className='rounded-full ' key={dayOfWeekIndex}></div>
@@ -73,14 +75,13 @@ export default async function GetCalender({year, month}: {year: number, month: s
                         
                         
                         return (
-                            
                             <div key={dayOfWeekIndex} 
-                            className={`hover:cursor-pointer border border-neutral-800 rounded-full py-2 pl-3 max-w-40 
-                            ${RatingBackground[ratingValue]} 
-                            $`}
+                            className={`hover:cursor-pointer border flex rounded-full py-2 pl-3 max-w-40 
+                            ${RatingBackground[ratingValue]} ${isToday? 'border-cyan-800': 'border-neutral-800'}`}
                             >
                                 {dayIndex}.
                             </div>
+
                         );
                     })}
                 </div>

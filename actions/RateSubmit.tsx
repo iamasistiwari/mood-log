@@ -2,7 +2,6 @@
 import prisma from '@/db/src'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
-import React from 'react'
 
 
 const submitRating = async (rating: number) => {
@@ -17,7 +16,7 @@ const submitRating = async (rating: number) => {
                 year: new Date().getFullYear(),
                 fullDate: new Date(),
                 rating,
-                date: 2
+                date: 17
             }
         })
         return user
@@ -28,14 +27,11 @@ const submitRating = async (rating: number) => {
 
 
 export default async function RateSubmit(rating: number) {
-    const submitResponse = await submitRating(rating)
-    if(!submitResponse){
-        alert('not bad')
+    try {
+        const submitResponse = await submitRating(rating);
+        return submitResponse;
+    } catch (error) {
+        console.error('Error during rating submission:', error);
+        return null;
     }
-    return (
-        
-        <div className='text-white text-3xl'>
-            NOT DONE
-        </div>
-    )
 }

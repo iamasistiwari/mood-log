@@ -3,6 +3,8 @@ import "./globals.css";
 import { Fugaz_One } from 'next/font/google';
 import NavBar from "@/components/main/NavBar";
 import { Providers } from "./providers";
+import { Toaster } from "@/components/ui/sonner"
+
 
 
 const fugazOne = Fugaz_One({
@@ -28,7 +30,9 @@ export default function RootLayout({
           <Providers>
             <NavBar />
             {children}
+            <Toaster />
           </Providers>
+
       </body>
     </html>
   );
