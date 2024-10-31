@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "buildcmd": "npx prisma generate --schema=./db/prisma/schema.prisma && npm run build",
     "lint": "next lint"
   },
   "dependencies": {
@@ -46,6 +47,6 @@
     "typescript": "^5.6.3"
   },
   "prisma": {
-    "seed": "ts-node ./db/prisma/seed.ts"
+    "schema": "./db/prisma/schema.prisma"
   }
 }
