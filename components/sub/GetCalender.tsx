@@ -1,4 +1,5 @@
 "use server"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import React from 'react';
 import prisma from '@/db/src';
 import { RatingBackground } from './RatingTags';

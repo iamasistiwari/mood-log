@@ -2,6 +2,7 @@ import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import React from 'react'
 import prisma from '@/db/src';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 
 
