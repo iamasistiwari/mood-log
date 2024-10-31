@@ -3,10 +3,11 @@ import { getServerSession } from 'next-auth';
 import React from 'react'
 import prisma from '@/db/src';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MoodLog = { date: number; rating: number };
 
 
 
-async function getInfo() {
+async function getInfo():Promise<MoodLog[] | undefined> {
   const session = await getServerSession(authOptions)
   try{
     const user = prisma.moodLog.findMany({
@@ -39,7 +40,7 @@ export default async function InfoBar() {
   const diffMinutes = Math.floor((differenceInfo % (1000 * 60 * 60)) / (1000 * 60));
 
 // calculating average mood
-  const user = await getInfo() || [];
+  const user: MoodLog[] = await getInfo() || [];
   const rating: number[] = user.map(item => item.rating)
   let sum = 0;
   rating.forEach((value) => {sum += value})
