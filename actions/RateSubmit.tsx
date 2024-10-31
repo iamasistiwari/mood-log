@@ -1,4 +1,5 @@
 "use server"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import prisma from '@/db/src'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
