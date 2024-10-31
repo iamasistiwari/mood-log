@@ -2,6 +2,8 @@ import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import React from 'react'
 import prisma from '@/db/src';
+import moment from 'moment-timezone';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MoodLog = { date: number; rating: number };
 
@@ -31,9 +33,25 @@ async function getInfo():Promise<MoodLog[] | undefined> {
 
 
 export default async function InfoBar() {
+  const getUserTimeZone = () => {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  };
+
+const timeZone = getUserTimeZone();
+console.log(timeZone)
+
+// Get the current date and time in the specified time zone
+// const currentDateInZone = moment.tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
+const currentDateInZone = moment.tz(timeZone)
+const ans = currentDateInZone.minutes()
+console.log("DIFFF", ans)
+
+// console.log(`Current date and time in ${timeZone}: ${currentDateInZone}`);
+
   
 // calculating time remaining in the day 
   const now = new Date();
+  console.log("now time", now)
   const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   const differenceInfo = Number(tomorrow) - Number(now);
   const diffHours = Math.floor(differenceInfo / (1000 * 60 * 60));
