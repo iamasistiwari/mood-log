@@ -5,8 +5,6 @@ import { JWT } from "next-auth/jwt";
 import prisma from "@/db/src";
 
 
-
-
 declare module "next-auth" {
     interface Session{
         user: {
@@ -18,14 +16,19 @@ declare module "next-auth" {
 }
 
 interface Credentials{
-    name: string,
+    name?: string,
     email: string,
     password: string
 }
 
 export const authOptions = {
+    pages: {
+        signIn: '/signin',
+        signUp: '/signup'
+    },
     providers: [
         CredentialsProvider({
+            type: "credentials",
             name: "Credentials",
             credentials: {
                 name: { label: "Name", type: "text", placeholder: "John Doe"},
@@ -34,11 +37,11 @@ export const authOptions = {
             },
             async authorize(credentials: Credentials | undefined){
                 if (!credentials) {
-                    throw new Error("ProvideCredentials")
+                    throw new Error("Provide Credentials")
                 }
                 const { name, email, password } = credentials;
-                if(!name || !email || !password){
-                    throw new Error("ProvideCredentials")
+                if(!email || !password){
+                    throw new Error("Provide Login Credentials")
                 }
                 
                 const hashedPassword = await bcrypt.hash(credentials.password, 10)
@@ -56,12 +59,16 @@ export const authOptions = {
                             email: existingUser.email,
                         }
                     }
-                    throw new Error("IncorrectPassword")
+                    throw new Error("Incorrect Password")
                 }else{
+                    if(!name){
+                        throw new Error("User Not Found")
+                    }
                     try{
+                        
                         const user = await prisma.user.create({
                             data: {
-                                name: name,
+                                name: name || "",
                                 email: email,
                                 password: hashedPassword,
                                 joinedDate: new Date()
@@ -80,7 +87,7 @@ export const authOptions = {
             }
         })
     ],
-    secret: process.env.JWT_SECRET || "AshishJsonWebToken",
+    secret: process.env.JWT_SECRET,
     callbacks: {
         async session({ token, session }: {token: JWT, session: Session}) {
             session.user.id = token.sub as string

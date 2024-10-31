@@ -1,5 +1,5 @@
 "use client"
-/* eslint-disable prefer-const */
+
 import {
     Select,
     SelectContent,
@@ -7,20 +7,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { FaCircleInfo } from "react-icons/fa6";
+
 import React, { useCallback, useEffect, useState } from 'react';
 import GetCalender from '../sub/GetCalender';
 import RateSubmit from "@/actions/RateSubmit";
-import { useToast } from "@/app/hooks/use-toast";
-
+import { toast } from "sonner";
+import SkeletonCalender from "../sub/SkeletonCalender";
+import Link from "next/link";
 export const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const years = Array.from({length: 2040-2024 +1}, (v, i) => 2024+i)
 
 
 export default function Calendar() {
     const [calenderData, setCalenderData] = useState<React.ReactNode>(null); 
-    const { toast } = useToast();
-
-
+    const [calenderLoaded, setCalenderLoaded] = useState(false);
     const currentMonth = new Date().getMonth();
     const currentMonthName = monthNames[currentMonth];
     const [selectedMonth, setSelectedMonth] = useState(`${currentMonthName}`)
@@ -33,7 +34,7 @@ export default function Calendar() {
         const year = Number(selectedYear);
         const calendar = await GetCalender({year, month})
         setCalenderData(calendar);
-        
+        setCalenderLoaded(true)
     }, [selectedMonth, selectedYear])
 
     useEffect(() => {
@@ -55,58 +56,43 @@ export default function Calendar() {
     };
     const handleSubmit = async () => {
         if(!warning && inputValue != ''){
-            const result = await RateSubmit(Number(inputValue));
-
-            if (result === null) {
-                toast({
-                    title: "Unsuccessfull attempt try again! 🌟",
-                    description: `${new Date().toDateString()}`,
-                    className: 'toast',
-                });
-                
-            }
-            if (!result) {
-                toast({
-                    title: "Unsuccessfull attempt try again! 🌟",
-                    description: `${new Date().toDateString()}`,
-                    className: 'toast',
-                });
-                
-            } else {
-                await fetchCalenderData();
-                toast({
-                    title: "Thank you for your rating! 🌟",
-                    description: `${new Date().toDateString()}`,
-                    className: 'toast',
-                });
-            }
+            toast.promise(
+                RateSubmit(Number(inputValue)),
+                {
+                  loading: 'Submitting your rating...', 
+                  success: 'Rating submitted successfully!',
+                  error: 'Failed to submit rating', 
+                }
+            );
+            fetchCalenderData();
         }
     }
 
 
-
-
     return (
         <div className='flex flex-col overflow-hidden gap-1'>
-            <div className="flex flex-col gap-2 w-screen relative mt-8">
-                <div className='w-screen flex flex-row justify-center items-center'>        
+            <div className="flex flex-col gap-2  lg:w-screen relative mt-8 ml-1">
+                <div className='w-screen flex flex-row pl-4 lg:pl-0 lg:justify-center items-center'>        
                     <input 
                         type="number"
                         onChange={handleInputChange}
                         placeholder="Enter a number"
-                        className={`no-arrows ml-5 border border-neutral-800 focus:outline-0 w-96 bg-black p-2 rounded-xl ${warning ? 'border-red-500' : 'border-gray-300'}`} 
+                        className={`no-arrows lg:ml-5 border border-neutral-800 focus:outline-0 w-44 lg:w-96 bg-black p-2 rounded-xl ${warning ? 'border-red-500' : 'border-gray-300'}`} 
                     />
-                    <button disabled={warning} onClick={handleSubmit} id='lightText' className={`bg-white font-extrabold text-black ${inputValue === ''? 'cursor-not-allowed': ''} rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
+                    <button disabled={warning} onClick={handleSubmit} id='lightText' className={`bg-slate-300 font-extrabold text-black ${inputValue === ''? 'cursor-not-allowed': ''} rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
+                    <Link href={'/info/ratings'} className="opacity-50 pl-4 cursor-pointer hover:opacity-75">
+                        <FaCircleInfo />
+                    </Link>
                 </div>
                 {warning && <p className="text-red-500 text-sm w-full top-[52px] right-9 text-center absolute">Entered number should be <span className='font-semibold'>&apos;0&apos; {'<='}= no {'=>'}= &apos;10&apos;</span></p>}
             </div>
-            <div className='flex gap-x-4 justify-center items-center mb-8 mt-10'>
+            <div className='flex gap-x-4 justify-center items-center mb-8 mt-8'>
                 <div>
                     <Select
                     value={selectedMonth}
                     onValueChange={(value) => setSelectedMonth(value)}
                     >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[120px] lg:w-[180px]">
                             <SelectValue placeholder={currentMonthName} />
                         </SelectTrigger>
                         <SelectContent>
@@ -121,7 +107,7 @@ export default function Calendar() {
                     value={selectedYear}
                     onValueChange={(value) => setSelectedYear(value)}
                     >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[100px] lg:w-[180px]">
                             <SelectValue placeholder={selectedYear} />
                         </SelectTrigger>
                         <SelectContent>
@@ -132,8 +118,8 @@ export default function Calendar() {
                     </Select>
                 </div>
             </div>
-            <div>
-                {/* //loader to be here */}
+            <div className="h-full">
+                {!calenderLoaded && <SkeletonCalender />}
                 {calenderData}
             </div>
         </div>

@@ -1,5 +1,4 @@
 "use server"
-/* eslint-disable prefer-const */
 import React from 'react';
 import prisma from '@/db/src';
 import { RatingBackground } from './RatingTags';
@@ -11,7 +10,6 @@ const months = {
     'September': 'Sept', 'October': 'Oct', 'November': 'Nov', 'December': 'Dec'
 };
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const now = new Date();
 const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 
@@ -47,37 +45,34 @@ export default async function GetCalender({year, month}: {year: number, month: s
     const firstDayOfMonth = monthNow.getDay();
     const daysInMonth = new Date(year, Object.keys(months).indexOf(month) + 1, 0).getDate();
 
-
-
-
     // Calculate how many rows are needed for the calendar grid
     const daysToDisplay = firstDayOfMonth + daysInMonth;
     const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
 
     return (
-        <div className='flex flex-col overflow-hidden gap-1 w-full'>
+        <div className='flex flex-col overflow-hidden w-screen lg:w-full h-full'>
             {Array.from({ length: numRows }, (_, rowIndex) => (
-                <div key={rowIndex} className='grid grid-cols-7 mx-40 gap-2'>
+                <div key={rowIndex} className='grid grid-cols-7 mx-4 lg:mx-52 h-10 mb-2'>
                     {dayList.map((dayOfWeek, dayOfWeekIndex) => {
                         // Calculate the day number to display in each cell
-                        let dayIndex = (rowIndex * 7) + dayOfWeekIndex - (firstDayOfMonth - 1);
+                        const dayIndex = (rowIndex * 7) + dayOfWeekIndex - (firstDayOfMonth - 1);
                         // Check if the day is within the current month
-                        let dayDisplay = (dayIndex > daysInMonth || dayIndex <= 0) ? false : true;
+                        const dayDisplay = (dayIndex > daysInMonth || dayIndex <= 0) ? false : true;
 
-                        let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
+                        // let isToday = dayIndex === now.getDate() && month === monthNames[now.getMonth()] && year === now.getFullYear();
                         if (!dayDisplay) {
                             return (
                                 <div className='rounded-full ' key={dayOfWeekIndex}></div>
                             );
                         }
 
-                        let ratingValue = Ratings[Dates.lastIndexOf(dayIndex)] === undefined ? '-0' : `${Ratings[Dates.lastIndexOf(dayIndex)]}` ;
+                        const ratingValue = Ratings[Dates.lastIndexOf(dayIndex)] === undefined ? '-0' : `${Ratings[Dates.lastIndexOf(dayIndex)]}` ;
                         
                         
                         return (
                             <div key={dayOfWeekIndex} 
-                            className={`hover:cursor-pointer border flex rounded-full py-2 pl-3 max-w-40 
-                            ${RatingBackground[ratingValue]} ${isToday? 'border-cyan-800': 'border-neutral-800'}`}
+                            className={`hover:cursor-pointer text-xs lg:text-sm border flex rounded-full justify-center items-center lg:justify-normal lg:items-start lg:py-2 lg:pl-3 w-10 h-10 lg:w-36 lg:h-auto border-neutral-800
+                            ${RatingBackground[ratingValue]} ${ratingValue === '-0' ? 'text-slate-400' : 'text-[0px]'} `}
                             >
                                 {dayIndex}.
                             </div>
@@ -89,6 +84,3 @@ export default async function GetCalender({year, month}: {year: number, month: s
         </div>
     );
 }
-
-
-// {isToday ? (ratingValue === '-0' ? 'bg-cyan-400' : '') : ''}

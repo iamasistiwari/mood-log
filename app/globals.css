@@ -10,15 +10,5 @@
 }
 
 .no-arrows {
-    -moz-appearance: textfield; /* Firefox */
-}
-
-/* styles/globals.css */
-.toast {
-    background-color: white !important;
-    color: black !important;
-    font-size: 15px;
-    border: 1px solid #000000;
-    border-radius: 20px; 
-    padding: 10pl;
+    -moz-appearance: textfield; 
 }
