@@ -14,7 +14,7 @@ const submitRating = async (rating: number) => {
 
 
     try {
-        const user = await prisma.$transaction(async (prisma) => {
+        const user = await prisma.$transaction(async () => {
             const existingMoodLog = await prisma.moodLog.findFirst({
                 where: { userId, month, year, date },
             });
