@@ -1,3 +1,4 @@
+"use client"
 import moment from 'moment-timezone';
 import { formatInTimeZone } from 'date-fns-tz';
 
