@@ -1,13 +1,9 @@
-"use client";
-import { getFullDate } from '@/lib/currentDate';
-import React, { useEffect, useState } from 'react';
+"use client"
+import { getUserHour } from '@/lib/currentDate';
+import React from 'react';
 
 export default function Page() {
-  const [date, setDate] = useState("");
-
-  useEffect(() => {
-    setDate(getFullDate());
-  }, [])
+  const date = getUserHour()
 
   return <div>{date}</div>;
 }

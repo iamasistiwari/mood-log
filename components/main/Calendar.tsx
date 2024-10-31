@@ -43,6 +43,8 @@ export default function Calendar() {
     }, [fetchCalenderData])
 
 
+    console.log("DATE TIME", new Date())
+
     const [inputValue, setInputValue] = useState<number | string>('');
     const [warning, setWarning] = useState(false);
     
