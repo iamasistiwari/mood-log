@@ -1,11 +1,12 @@
-import { getFullDate } from '@/lib/currentDate'
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from 'react';
 
-export default function page() {
-  const date = getFullDate();
-  return (
-    <div>
-      {date}
-    </div>
-  )
+export default function Page() {
+  const [date, setDate] = useState(0);
+
+  useEffect(() => {
+    setDate(new Date().getMinutes());
+  }, []);
+
+  return <div>{date}</div>;
 }
