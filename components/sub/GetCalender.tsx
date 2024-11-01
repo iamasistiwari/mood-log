@@ -1,9 +1,8 @@
 "use server"
+
 import React from 'react';
-import prisma from '@/db/src';
 import { RatingBackground } from './RatingTags';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { getInfo, MoodLog } from '@/actions/RateSubmit';
 
 const months = {
     'January': 'Jan', 'February': 'Feb', 'March': 'Mar', 'April': 'Apr', 
@@ -13,32 +12,11 @@ const months = {
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-type MoodLog = { date: number; rating: number };
-
-
-const getData = async (year: number, month: number): Promise<MoodLog[] | undefined> => {
-    const session = await getServerSession(authOptions)
-    try{
-        const user = prisma.moodLog.findMany({
-            where: {
-                userId: session?.user.id,
-                month,
-                year
-            },
-            select:{
-                date: true,
-                rating: true
-            }
-        })
-        return user
-    }catch(e){
-        console.log(e)
-    }
-}
 
 export default async function GetCalender({year, month}: {year: number, month: string}) {
     const monthNumber = monthNames.indexOf(month)+1;
-    const userData: MoodLog[] = await getData(year, monthNumber) ?? [];
+
+    const userData: MoodLog[] = await getInfo(monthNumber, year) ?? [];
     const Dates: number[] = userData.map(item => item.date)
     const Ratings: number[] = userData.map(item => item.rating)
 

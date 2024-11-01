@@ -1,99 +1,101 @@
-import { authOptions } from '@/lib/auth';
-import { getServerSession } from 'next-auth';
-import React from 'react'
-import prisma from '@/db/src';
-import moment from 'moment-timezone';
-
+"use client"
+import React, { useCallback, useEffect, useState } from 'react'
+import { getInfo } from '@/actions/RateSubmit';
+import { MoodLog } from '@/actions/RateSubmit';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MoodLog = { date: number; rating: number };
 
-
-
-async function getInfo():Promise<MoodLog[] | undefined> {
-  const session = await getServerSession(authOptions)
-  try{
-    const user = prisma.moodLog.findMany({
-        where: {
-            userId: session?.user.id,
-            month: new Date().getMonth()+1,
-            year: new Date().getFullYear()
-        },
-        select:{
-            rating: true,
-            date: true
-        }
-    })
-    return user
-  }catch(e){
-    console.error(e)
-    return []
-  }
-  
+interface timeLeftType {
+  diffHours: number,
+  diffMinutes: number
 }
 
+export default function InfoBar({month, year}: {month: number, year: number}) {
 
-export default async function InfoBar() {
-  const getUserTimeZone = () => {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
-  };
+  const [user, setUser ] = useState<MoodLog[]>([]);
+  const [userFecthed, setUserFetched] = useState<boolean>(false);
 
-const timeZone = getUserTimeZone();
-console.log(timeZone)
+  const [timeLeft, setTimeleft] = useState<timeLeftType>({diffHours: 0, diffMinutes: 0})
+  const [streak, setStreak] = useState<number>();
+  const [rating, setRating] = useState<number>();
 
-// Get the current date and time in the specified time zone
-// const currentDateInZone = moment.tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
-const currentDateInZone = moment.tz(timeZone)
-const ans = currentDateInZone.minutes()
-console.log("DIFFF", ans)
+  const fetchData = useCallback(async () => {
+    const res = await getInfo(month, year)
+    setUserFetched(true)
+    return res
+  },[month, year])
 
-// console.log(`Current date and time in ${timeZone}: ${currentDateInZone}`);
+  console.log(user)
 
   
-// calculating time remaining in the day 
-  const now = new Date();
-  console.log("now time", now)
-  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-  const differenceInfo = Number(tomorrow) - Number(now);
-  const diffHours = Math.floor(differenceInfo / (1000 * 60 * 60));
-  const diffMinutes = Math.floor((differenceInfo % (1000 * 60 * 60)) / (1000 * 60));
+  useEffect(() => {
 
-// calculating average mood
-  const user: MoodLog[] = await getInfo() || [];
-  const rating: number[] = user.map(item => item.rating)
-  let sum = 0;
-  rating.forEach((value) => {sum += value})
-  const averageRating = Math.floor((sum / now.getDate())*100)/100
+    const fetchedData = async () => {
+      const data = await fetchData();
+      if (data) {
+        setUser(data);
+      }
 
-//calculating the streak
-  const dates: number[] = user.map(item => item.date)
-  let streakCount = 0;
-  for(let i = 1; i < dates.length; i++){
-    if(dates[i] === dates[i-1]+1){
-      streakCount += 1
-    }else{
-      streakCount = 0
     }
-  }
-  if(streakCount != 0){
-    streakCount += 1;
-  }
+    fetchedData();
+
+  },[fetchData])
+
+
+  useEffect(() => {
+
+
+    // calculating time remaining in the day 
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const differenceInfo = Number(tomorrow) - Number(now);
+    const diffHours = Math.floor(differenceInfo / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((differenceInfo % (1000 * 60 * 60)) / (1000 * 60));
+    setTimeleft({diffHours, diffMinutes})
+
+    // calculating average rating
+    const rating: number[] = user.map(item => item.rating)
+    let sum = 0;
+    rating.forEach((value) => {sum += value})
+    setRating(Math.floor((sum / now.getDate())*100)/100) 
+
+
+
+    //calculating the streak
+    const dates: number[] = user.map(item => item.date)
+    let streakCount = 0;
+    for(let i = 1; i < dates.length; i++){
+      if(dates[i] === dates[i-1]+1){
+        streakCount += 1
+      }else{
+        streakCount = 0
+      }
+    }
+    if(streakCount != 0){
+      streakCount += 1;
+    }
+    setStreak(streakCount)
+
+  }, [userFecthed, user])
+
+
+
 
   return (
     <div className='lg:w-screen px-4 lg:px-[430px] mt-8 mb-10 '>
         <div className='flex flex-row w-full border justify-between py-3 rounded-2xl px-2 lg:px-10 border-neutral-800'>
           <div className='flex flex-col'>
             <span className='text-sm lg:text-base'>Streak</span>
-            <span className='w-full text-center text-indigo-600'>{streakCount}</span>
+            <span className='w-full text-center text-indigo-600'>{streak}</span>
 
           </div>
           <div className='flex flex-col'>
             <span className='text-sm lg:text-base'>Average Mood</span>
-            <span className='w-full text-center text-indigo-600'>{averageRating}</span>
+            <span className='w-full text-center text-indigo-600'>{rating}</span>
 
           </div>
           <div className='flex flex-col'>
             <span className='text-sm lg:text-base'>Time Remaining</span>
-            <span className='w-full text-center text-indigo-600'>{diffHours +" hr "+ diffMinutes+ " min"}</span>
+            <span className='w-full text-center text-indigo-600'>{timeLeft?.diffHours +" hr "+ timeLeft?.diffMinutes+ " min"}</span>
           </div>
 
         </div>

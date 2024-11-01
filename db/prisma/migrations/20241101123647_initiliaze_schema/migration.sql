@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "MoodLog" ALTER COLUMN "fullDate" SET DATA TYPE TEXT;

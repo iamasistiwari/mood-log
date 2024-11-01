@@ -12,10 +12,11 @@ import { FaCircleInfo } from "react-icons/fa6";
 
 import React, { useCallback, useEffect, useState } from 'react';
 import GetCalender from '../sub/GetCalender';
-import RateSubmit from "@/actions/RateSubmit";
 import { toast } from "sonner";
 import SkeletonCalender from "../sub/SkeletonCalender";
 import Link from "next/link";
+import InfoBar from "../sub/InfoBar";
+import { RateSubmit } from "@/actions/RateSubmit";
 export const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const years = Array.from({length: 2040-2024 +1}, (v, i) => 2024+i)
 
@@ -28,11 +29,13 @@ export default function Calendar() {
     const [selectedMonth, setSelectedMonth] = useState(`${currentMonthName}`)
     const [selectedYear, setSelectedYear] = useState(`${new Date().getFullYear()}`)
 
-
+    const currentDate = new Date().getDate()
+    const fullDate = new Date().toLocaleDateString();
 
     const fetchCalenderData = useCallback(async () => {
         const month = selectedMonth;
         const year = Number(selectedYear);
+
         const calendar = await GetCalender({year, month})
         setCalenderData(calendar);
         setCalenderLoaded(true)
@@ -43,9 +46,7 @@ export default function Calendar() {
     }, [fetchCalenderData])
 
 
-    console.log("DATE TIME", new Date())
-
-    const [inputValue, setInputValue] = useState<number | string>('');
+    const [inputValue, setInputValue] = useState<number>(0);
     const [warning, setWarning] = useState(false);
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,9 +59,9 @@ export default function Calendar() {
         }
     };
     const handleSubmit = async () => {
-        if(!warning && inputValue != ''){
+        if(!warning){
             toast.promise(
-                RateSubmit(Number(inputValue)),
+                RateSubmit(inputValue, currentDate, fullDate, (monthNames.indexOf(selectedMonth)+1), Number(selectedYear)),
                 {
                   loading: 'Submitting your rating...', 
                   success: 'Rating submitted successfully!',
@@ -74,6 +75,9 @@ export default function Calendar() {
 
     return (
         <div className='flex flex-col overflow-hidden gap-1'>
+            <div>
+                <InfoBar month={monthNames.indexOf(selectedMonth)+1} year={Number(selectedYear)} />
+            </div>
             <div className="flex flex-col gap-2  lg:w-screen relative mt-8 ml-1">
                 <div className='w-screen flex flex-row pl-4 lg:pl-0 lg:justify-center items-center'>        
                     <input 
@@ -82,7 +86,7 @@ export default function Calendar() {
                         placeholder="Enter a number"
                         className={`no-arrows lg:ml-5 border border-neutral-800 focus:outline-0 w-44 lg:w-96 bg-black p-2 rounded-xl ${warning ? 'border-red-500' : 'border-gray-300'}`} 
                     />
-                    <button disabled={warning} onClick={handleSubmit} id='lightText' className={`bg-slate-300 font-extrabold text-black ${inputValue === ''? 'cursor-not-allowed': ''} rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
+                    <button disabled={warning} onClick={handleSubmit} id='lightText' className={`bg-slate-300 font-extrabold text-black rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
                     <Link href={'/info/ratings'} className="opacity-50 pl-4 cursor-pointer hover:opacity-75">
                         <FaCircleInfo />
                     </Link>

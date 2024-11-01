@@ -1,19 +1,18 @@
 "use server"
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 import prisma from '@/db/src'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 
+export type MoodLog = { date: number; rating: number };
 
-const submitRating = async (rating: number) => {
+
+
+const submitRating = async ({rating, date, fullDate, month, year}: {rating: number, date: number, fullDate: string, month: number, year: number}) => {
     const session = await getServerSession(authOptions);
     const userId = session?.user.id || "";
-    const today = new Date();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    const date = today.getDate();
-
-
+    
     try {
         const user = await prisma.$transaction(async () => {
             const existingMoodLog = await prisma.moodLog.findFirst({
@@ -29,7 +28,7 @@ const submitRating = async (rating: number) => {
                 return await prisma.moodLog.create({
                     data: {
                         userId,
-                        fullDate: today,
+                        fullDate,
                         date,
                         month,
                         year,
@@ -45,11 +44,33 @@ const submitRating = async (rating: number) => {
 }
 
 
-export default async function RateSubmit(rating: number) {
+export async function RateSubmit(rating: number, date: number, fullDate: string, month: number, year: number) {
     try {
-        const submitResponse = await submitRating(rating);
+        const submitResponse = await submitRating({rating, date, fullDate, month, year});
         return submitResponse;
     } catch (error) {
         return error
+    }
+}
+
+
+export async function getInfo(month: number, year: number):Promise<MoodLog[] | undefined> {
+    const session = await getServerSession(authOptions)
+    try{
+      const user = prisma.moodLog.findMany({
+          where: {
+              userId: session?.user.id,
+              month: month,
+              year: year
+          },
+          select:{
+              rating: true,
+              date: true
+          }
+      })
+      return user
+    }catch(e){
+      console.error(e)
+      return []
     }
 }

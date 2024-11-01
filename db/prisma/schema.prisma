@@ -25,7 +25,7 @@ model User {
 
 model MoodLog {
   id       Int      @id @default(autoincrement())
-  fullDate DateTime
+  fullDate String
   date     Int      
   year     Int
   month    Int
