@@ -24,8 +24,6 @@ export default function InfoBar({month, year}: {month: number, year: number}) {
     return res
   },[month, year])
 
-  console.log(user)
-
   
   useEffect(() => {
 
@@ -34,7 +32,6 @@ export default function InfoBar({month, year}: {month: number, year: number}) {
       if (data) {
         setUser(data);
       }
-
     }
     fetchedData();
 
@@ -65,6 +62,7 @@ export default function InfoBar({month, year}: {month: number, year: number}) {
     let streakCount = 0;
     for(let i = 1; i < dates.length; i++){
       if(dates[i] === dates[i-1]+1){
+        
         streakCount += 1
       }else{
         streakCount = 0

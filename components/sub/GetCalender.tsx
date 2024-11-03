@@ -20,7 +20,7 @@ export default async function GetCalender({year, month}: {year: number, month: s
     const Dates: number[] = userData.map(item => item.date)
     const Ratings: number[] = userData.map(item => item.rating)
 
-    // Correctly calculate the first day of the month and the number of days in the month
+    // Calculate the first day of the month and the number of days in the month
     const monthNow = new Date(year, Object.keys(months).indexOf(month), 1);
     const firstDayOfMonth = monthNow.getDay();
     const daysInMonth = new Date(year, Object.keys(months).indexOf(month) + 1, 0).getDate();

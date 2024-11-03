@@ -16,6 +16,9 @@ const fugazOne = Fugaz_One({
 export const metadata: Metadata = {
   title: "Mood Log",
   description: "It helps you to track your moods every day of year",
+  icons: {
+    icon: '/icon2.png'
+  }
 };
 
 export default function RootLayout({
