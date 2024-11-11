@@ -85,6 +85,7 @@ export default function Calendar() {
                         onChange={handleInputChange}
                         placeholder="Enter a number"
                         className={`no-arrows lg:ml-5 border border-neutral-800 focus:outline-0 w-44 lg:w-96 bg-black p-2 rounded-xl ${warning ? 'border-red-500' : 'border-gray-300'}`} 
+                        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                     />
                     <button disabled={warning} onClick={handleSubmit} id='lightText' className={`bg-slate-300 font-extrabold text-black rounded-xl py-2 px-5 ml-5 ${warning ? 'cursor-not-allowed opacity-30': 'cursor-pointer'} `}>Rate</button>
                     <Link href={'/info/ratings'} className="opacity-50 pl-4 cursor-pointer hover:opacity-75">
